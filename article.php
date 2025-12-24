@@ -10,8 +10,12 @@
  * 
  * On va ensuite afficher l'article puis ses commentaires
  */
-require_once('libraries/database.php');
 require_once('libraries/utils.php');
+require_once('libraries/models/Article.php');
+require_once('libraries/models/Comment.php');
+
+$articleModel = new Article();
+$commentModel = new Comment();
 /**
  * 1. Récupération du param "id" et vérification de celui-ci
  */
@@ -27,38 +31,17 @@ if (!empty($_GET['id']) && ctype_digit($_GET['id'])) {
 if (!$article_id) {
     die("Vous devez préciser un paramètre `id` dans l'URL !");
 }
-
-/**
- * 2. Connexion à la base de données avec PDO
- * Attention, on précise ici deux options :
- * - Le mode d'erreur : le mode exception permet à PDO de nous prévenir violament quand on fait une connerie ;-)
- * - Le mode d'exploitation : FETCH_ASSOC veut dire qu'on exploitera les données sous la forme de tableaux associatifs
- * 
- * PS : Vous remarquez que ce sont les mêmes lignes que pour l'index.php ?!
- */
-$pdo = getPdo();
-
 /**
  * 3. Récupération de l'article en question
  * On va ici utiliser une requête préparée car elle inclue une variable qui provient de l'utilisateur : Ne faites
  * jamais confiance à ce connard d'utilisateur ! :D
  */
-$query = $pdo->prepare("SELECT * FROM articles WHERE id = :article_id");
-
-// On exécute la requête en précisant le paramètre :article_id 
-$query->execute(['article_id' => $article_id]);
-
-// On fouille le résultat pour en extraire les données réelles de l'article
-$article = $query->fetch();
-
+$article = $articleModel->find($article_id);
 /**
  * 4. Récupération des commentaires de l'article en question
  * Pareil, toujours une requête préparée pour sécuriser la donnée filée par l'utilisateur (cet enfoiré en puissance !)
  */
-$query = $pdo->prepare("SELECT * FROM comments WHERE article_id = :article_id ORDER BY created_at DESC");
-$query->execute(['article_id' => $article_id]);
-$commentaires = $query->fetchAll();
-
+$commentaires = $commentModel->findallByArticle($article_id);
 /**
  * 5. On affiche 
  */
