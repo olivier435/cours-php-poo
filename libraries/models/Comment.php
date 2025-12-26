@@ -4,7 +4,7 @@ require_once('libraries/models/Model.php');
 
 class Comment extends Model
 {
-
+    protected $table = 'comments';
     /**
      * retourne les articles classes par date de creation
      *
@@ -20,38 +20,7 @@ class Comment extends Model
         return $commentaires;
     }
 
-    /**
-     * retourne un commentaire de la base de donéne grace a son identifiant
-     * @param integer $id
-     * @return array |bool le commantaire si one le trouve, false si on ne le trouve pas
-     */
 
-    public function findt(int $id)
-    {
-
-        $query = $this->pdo->prepare('DELETE FROM comments WHERE id = :id');
-        $query->execute(['id' => $id]);
-        $comment = $query->fetch();
-        return $comment;
-    }
-
-
-    /**
-     * supprimer un commentaire gace a un identifiant
-     * 
-     * @param integer $id
-     * @return void le commentaire si on le trouve false si on ne le trouve pas
-     */
-
-
-
-    public function delete(int $id): void
-
-    {
-
-        $query = $this->pdo->prepare('DELETE FROM comments WHERE id = :id');
-        $query->execute(['id' => $id]);
-    }
     /**
      * Undocumented function
      *
