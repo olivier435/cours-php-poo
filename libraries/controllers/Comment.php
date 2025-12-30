@@ -4,7 +4,7 @@ namespace Controllers;
 
 
 
-require_once('libraries/utils.php');
+
 
 class Comment extends Controller
 {
@@ -51,7 +51,7 @@ class Comment extends Controller
         $this->model->insert($author, $content, $article_id);
 
         // 4. Redirection vers l'article en question :
-        redirect("article.php?id=" . $article_id);
+        \Http::redirect("article.php?id=" . $article_id);
 
         //inserer commentaire
     }
@@ -84,7 +84,7 @@ class Comment extends Controller
          * 5. Redirection vers l'article en question
          */
 
-        redirect("article.php?id=" . $article_id);
+        \Http::redirect("article.php?id=" . $article_id);
         //supprimer comentaire
     }
 }
